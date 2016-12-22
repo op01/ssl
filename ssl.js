@@ -32,6 +32,15 @@ function writeSource(dir,code,langauge){
     }
     else return Promise.reject(new Error('langauge not support'))
 }
+function writeStdinFile(dir,stdin){
+    return new Promise((res,rej)=>{
+        const file=dir+'/_in';
+        fs.writeFile(file,stdin,err=>{
+            if(err)rej(err)
+            else res(file)
+        })
+    })
+}
 function compile(des,langauge){
     if(compiler.hasOwnProperty(langauge)){
         const cmd=compiler[langauge](des)
@@ -49,12 +58,18 @@ function clean(){
 }
 function run(langauge){
     if(exec.hasOwnProperty(langauge)){
-        return isolate(['-p','--cg','--run','--',...exec[langauge]])
+        return isolate(
+            ['-p',
+            '--cg',
+            '--stdin','_in',
+            '--run',
+            '--',
+            ...exec[langauge]])
     }
     else return Promise.reject(new Error('langauge not support'))
 }
 function ssl(options){
-    const {source_code,langauge}=options
+    const {source_code,langauge,stdin}=options
     var isolateDirectory;
     return init()
     .then(dir=>{
@@ -63,6 +78,9 @@ function ssl(options){
     })
     .then(()=>{
         return compile(isolateDirectory,langauge)
+    })
+    .then(()=>{
+        return writeStdinFile(isolateDirectory,stdin)
     })
     .then(()=>run(langauge))
     .then(x=>{
