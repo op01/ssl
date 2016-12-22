@@ -4,15 +4,18 @@ const fs=require('fs')
 
 const sourceFile={
     'cpp':'source_code.cc',
-    'python3':'source_code.py'
+    'python3':'source_code.py',
+    'haskell':'source_code.hs'
 }
 const compiler={
     'cpp':(des)=>`g++ -o ${des}/a.out ${des}/source_code.cc`,
-    'python3':(des)=>`python3 -m py_compile ${des}/source_code.py`
+    'python3':(des)=>`python3 -m py_compile ${des}/source_code.py`,
+    'haskell':(des)=>`ghc -o ${des}/b.out ${des}/source_code.hs`
 }
 const exec={
     'cpp':['./a.out'],
-    'python3':['/usr/bin/python3','-S','source_code.py']
+    'python3':['/usr/bin/python3','-S','source_code.py'],
+    'haskell':['./b.out']
 }
 function init(){
     return isolate(['--cg','--init'])
