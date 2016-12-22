@@ -56,10 +56,11 @@ function compile(des,langauge){
 function clean(){
     return isolate(['--cleanup'])
 }
-function run(langauge){
+function run(boxId,langauge){
     if(exec.hasOwnProperty(langauge)){
         return isolate(
-            ['-p',
+            ['--box-id',boxId,
+            '-p',
             '--cg',
             '--stdin','_in',
             '--run',
@@ -71,9 +72,11 @@ function run(langauge){
 function ssl(options){
     const {source_code,langauge,stdin}=options
     var isolateDirectory;
+    var isolateBoxId;
     return init()
     .then(dir=>{
         isolateDirectory=dir+'/box'
+        isolateBoxId=/\d+$/.exec(dir)[0]
         return writeSource(isolateDirectory,source_code,langauge)
     })
     .then(()=>{
@@ -82,7 +85,7 @@ function ssl(options){
     .then(()=>{
         return writeStdinFile(isolateDirectory,stdin)
     })
-    .then(()=>run(langauge))
+    .then(()=>run(isolateBoxId,langauge))
     .then(x=>{
         return clean()
         .then(()=>x.stdout)
