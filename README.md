@@ -7,13 +7,14 @@ API
 ```javascript
 // request
 {
-  "source_code":"print(1+2)",
-  "langauge":"python3"
+  "source_code":"print(sum([int(i) for i in input().split()]))",
+  "langauge":"python3",
+  "stdin":"3 4 5"
 }
 
 // response
 {
-  "stdout":"3\n"
+  "stdout":"12\n"
 }
 ```
 Docker
