@@ -2,6 +2,9 @@ sudo: required
 language: node_js
 node_js:
   - "node"
+  - "iojs"
+  - "6"
+  - "4"
 services:
   - docker
 before_script:
@@ -9,3 +12,5 @@ before_script:
 script:
   - standard
   - docker run --privileged --entrypoint /bin/sh op01/ssl -c "cd /app; npm test"
+notifications:
+  email: false
