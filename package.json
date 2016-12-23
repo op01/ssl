@@ -1,9 +1,9 @@
 {
   "name": "ssl",
   "version": "0.0.0",
-  "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "standard"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
