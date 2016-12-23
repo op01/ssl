@@ -1,9 +1,6 @@
-const isolate = require('./isolate')
+const isolate = require('./lib/isolate')
+const util = require('./lib/util')
 const cp = require('child_process')
-const fs = require('fs')
-
-const MAX_BOX = 1000
-const boxIds = new Set()
 
 const sourceFile = {
   'cpp': 'source_code.cc',
@@ -21,20 +18,6 @@ const exec = {
   'haskell': ['./b.out']
 }
 
-function generateBoxId () {
-  if (boxIds.size >= MAX_BOX) {
-    throw new Error('GG box overflow')
-  } else {
-    for (let i = 0; i < MAX_BOX; i++) {
-      if (!boxIds.has(i)) {
-        boxIds.add(i)
-        return '' + i
-      }
-    }
-    throw new Error('why no space for me')
-  }
-}
-
 function init (boxId) {
   return isolate(['--cg', '--init', '--box-id', boxId])
     .then(result => {
@@ -43,23 +26,13 @@ function init (boxId) {
 }
 function writeSource (dir, code, langauge) {
   if (sourceFile.hasOwnProperty(langauge)) {
-    return new Promise((resolve, reject) => {
-      const file = dir + '/' + sourceFile[langauge]
-      fs.writeFile(file, code, err => {
-        if (err)reject(err)
-        else resolve(file)
-      })
-    })
+    const file = dir + '/' + sourceFile[langauge]
+    return util.writeFile(file, code)
   } else return Promise.reject(new Error('langauge not support'))
 }
 function writeStdinFile (dir, stdin) {
-  return new Promise((resolve, reject) => {
-    const file = dir + '/_in'
-    fs.writeFile(file, stdin, err => {
-      if (err)reject(err)
-      else resolve(file)
-    })
-  })
+  const file = dir + '/_in'
+  return util.writeFile(file, stdin)
 }
 function compile (des, langauge) {
   if (compiler.hasOwnProperty(langauge)) {
@@ -89,7 +62,7 @@ function run (boxId, langauge) {
 }
 function ssl (options) {
   const {source_code, langauge, stdin = ''} = options
-  const isolateBoxId = generateBoxId()
+  const isolateBoxId = util.generateBoxId()
   var isolateDirectory
   return init(isolateBoxId)
     .then(dir => {
