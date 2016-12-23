@@ -7,24 +7,24 @@ const app = express()
 
 app.use(logger('dev'))
 app.use(bodyParser.json({
-    limit:'1mb'
+  limit: '1mb'
 }))
 
-app.post('/',(req,res) => {
-    ssl(req.body)
-    .then(stdout=>{
-        res.json({
-            stdout:stdout
-        })
+app.post('/', (req, res) => {
+  ssl(req.body)
+    .then(stdout => {
+      res.json({
+        stdout: stdout
+      })
     })
-    .catch(e=>{
-        res.json(e)
+    .catch(e => {
+      res.json(e)
     })
 })
 
 app.use((req, res, next) => {
   res.status(404)
   res.send('Not Found')
-});
+})
 
 module.exports = app
