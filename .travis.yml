@@ -9,3 +9,5 @@ before_script:
 script:
   - standard
   - docker run --privileged --entrypoint /bin/sh op01/ssl -c "cd /app; npm test"
+notifications:
+  email: false
