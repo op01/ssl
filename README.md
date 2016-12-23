@@ -17,6 +17,12 @@ API
   "stdout":"12\n"
 }
 ```
+Supported langauges
+-------------------
+- C++
+- Python3
+- Haskell
+
 Docker
 -----
 Running inside docker need `--privileged` option
