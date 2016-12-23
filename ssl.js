@@ -85,13 +85,16 @@ function ssl (options) {
     .then(() => {
       return writeStdinFile(isolateDirectory, stdin)
     })
-    .then(() => run(isolateBoxId, langauge))
+    .then(() => {
+      return run(isolateBoxId, langauge)
+    })
     .then(x => {
       return clean()
         .then(() => x.stdout)
     })
     .catch(e => {
-      console.log('error', e)
+      console.error('error', e)
+      return Promise.reject(e)
     })
 }
 module.exports = ssl
