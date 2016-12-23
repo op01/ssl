@@ -25,6 +25,7 @@ Supported langauges
 - C++
 - Python3
 - Haskell
+- Java (Coming soon)
 
 Docker
 -----
