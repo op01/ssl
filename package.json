@@ -1,9 +1,9 @@
 {
   "name": "ssl",
   "version": "0.0.0",
-  "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "ava"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
@@ -11,6 +11,7 @@
     "morgan": "~1.7.0"
   },
   "devDependencies": {
+    "ava": "^0.17.0",
     "standard": "^8.6.0"
   }
 }

@@ -2,6 +2,9 @@ const isolate = require('./isolate')
 const cp = require('child_process')
 const fs = require('fs')
 
+const MAX_BOX = 1000
+const boxIds = new Set()
+
 const sourceFile = {
   'cpp': 'source_code.cc',
   'python3': 'source_code.py',
@@ -17,8 +20,23 @@ const exec = {
   'python3': ['/usr/bin/python3', '-S', 'source_code.py'],
   'haskell': ['./b.out']
 }
-function init () {
-  return isolate(['--cg', '--init'])
+
+function generateBoxId () {
+  if (boxIds.size >= MAX_BOX) {
+    throw new Error('GG box overflow')
+  } else {
+    for (let i = 0; i < MAX_BOX; i++) {
+      if (!boxIds.has(i)) {
+        boxIds.add(i)
+        return '' + i
+      }
+    }
+    throw new Error('why no space for me')
+  }
+}
+
+function init (boxId) {
+  return isolate(['--cg', '--init', '--box-id', boxId])
     .then(result => {
       return result.stdout.trim()
     })
@@ -54,8 +72,8 @@ function compile (des, langauge) {
     })
   } else return Promise.reject(new Error('langauge not support'))
 }
-function clean () {
-  return isolate(['--cleanup'])
+function clean (boxId) {
+  return isolate(['--cleanup', '--box-id', boxId])
 }
 function run (boxId, langauge) {
   if (exec.hasOwnProperty(langauge)) {
@@ -70,13 +88,12 @@ function run (boxId, langauge) {
   } else return Promise.reject(new Error('langauge not support'))
 }
 function ssl (options) {
-  const {source_code, langauge, stdin} = options
+  const {source_code, langauge, stdin = ''} = options
+  const isolateBoxId = generateBoxId()
   var isolateDirectory
-  var isolateBoxId
-  return init()
+  return init(isolateBoxId)
     .then(dir => {
       isolateDirectory = dir + '/box'
-      isolateBoxId = /\d+$/.exec(dir)[0]
       return writeSource(isolateDirectory, source_code, langauge)
     })
     .then(() => {
@@ -89,7 +106,7 @@ function ssl (options) {
       return run(isolateBoxId, langauge)
     })
     .then(x => {
-      return clean()
+      return clean(isolateBoxId)
         .then(() => x.stdout)
     })
     .catch(e => {

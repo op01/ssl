@@ -1,5 +1,7 @@
 Super Supreme Library
 =====================
+[![Build Status](https://travis-ci.org/op01/ssl.svg?branch=master)](https://travis-ci.org/op01/ssl)
+
 Compile and run untrusted program securely (?)
 
 API
