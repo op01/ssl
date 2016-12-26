@@ -19,7 +19,7 @@ test('python A+B', async t => {
   t.is(stdout, '1111\n')
 })
 
-test('java runnable', async t => {
+test.skip('java runnable', async t => {
   const p = ssl({
     source_code: `public class supreme{
       public static void main(String[] args){
