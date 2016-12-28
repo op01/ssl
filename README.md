@@ -22,9 +22,11 @@ API
 ```
 Supported langauges
 -------------------
+- C
 - C++
 - Python3
 - Haskell
+- Java
 
 Docker
 -----
